@@ -14,7 +14,7 @@ from config import settings
 from graph.neo4j_client import neo4j_client
 from api.routes import ingest, graph, analytics, ai as ai_routes, cases as cases_routes
 from api.routes import auth as auth_routes
-from auth import decode_access_token
+from auth import decode_access_token, get_user
 from jose import JWTError
 
 logging.basicConfig(
@@ -88,8 +88,9 @@ async def auth_middleware(request: Request, call_next):
     token = auth_header.split(" ", 1)[1]
     try:
         payload = decode_access_token(token)
-        if payload.get("sub") is None:
-            return JSONResponse(status_code=401, content={"detail": "Invalid token payload"})
+        sub = payload.get("sub")
+        if sub is None or not get_user(sub):
+            return JSONResponse(status_code=401, content={"detail": "Invalid token or user not found"})
     except JWTError:
         return JSONResponse(status_code=401, content={"detail": "Invalid or expired token"})
 

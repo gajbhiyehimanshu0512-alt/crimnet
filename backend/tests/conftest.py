@@ -11,7 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from jose import JWTError
 
-from auth import decode_access_token
+from auth import decode_access_token, get_user
 from api.routes import auth as auth_routes, cases as cases_routes, ai as ai_routes
 
 
@@ -43,8 +43,9 @@ def _build_test_app() -> FastAPI:
         token = auth_header.split(" ", 1)[1]
         try:
             payload = decode_access_token(token)
-            if payload.get("sub") is None:
-                return JSONResponse(status_code=401, content={"detail": "Invalid token payload"})
+            sub = payload.get("sub")
+            if sub is None or not get_user(sub):
+                return JSONResponse(status_code=401, content={"detail": "Invalid token or user not found"})
         except JWTError:
             return JSONResponse(status_code=401, content={"detail": "Invalid or expired token"})
 

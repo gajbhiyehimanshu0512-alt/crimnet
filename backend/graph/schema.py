@@ -217,7 +217,7 @@ class CaseStatus(str, Enum):
 
 
 class CaseCreate(BaseModel):
-    name: str
+    name: str = Field(..., min_length=1)
     description: str = ""
     priority: str = "MEDIUM"      # LOW, MEDIUM, HIGH, CRITICAL
     assigned_to: Optional[str] = None
