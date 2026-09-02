@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --surface: #0f172a;
+  --card: #1e293b;
+  --border: #334155;
+  --accent: #e63946;
+  --primary: #1e3a5f;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background-color: var(--surface);
+  color: #e2e8f0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar       { width: 6px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* Cytoscape graph container */
+.cy-container {
+  width: 100%;
+  height: 100%;
+  background: #0d1a2d;
+  border-radius: 8px;
+}
+
+/* Risk badges */
+.badge-critical { background:#7f1d1d; color:#fca5a5; }
+.badge-high     { background:#7c2d12; color:#fdba74; }
+.badge-medium   { background:#713f12; color:#fde68a; }
+.badge-low      { background:#14532d; color:#86efac; }
+
+/* Card component */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+/* Animated pulse for critical alerts */
+@keyframes pulse-red {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+.animate-pulse-red { animation: pulse-red 1.5s infinite; }
