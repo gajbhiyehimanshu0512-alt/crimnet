@@ -16,15 +16,21 @@ logger = logging.getLogger(__name__)
 _chroma_client = None
 _collection    = None
 _llm           = None
-_embeddings    = None
 
 
 def _get_chroma():
+    """
+    Get (or create) the ChromaDB collection.
+    Uses ChromaDB's built-in default embedding function (ONNX MiniLM),
+    which ships with the chromadb package itself — no torch / sentence-transformers
+    dependency required, keeping the backend image lightweight.
+    """
     global _chroma_client, _collection
     if _chroma_client is None:
         import chromadb
-        _chroma_client = chromadb.HttpClient(host=settings.chroma_url.replace("http://", "").split(":")[0],
-                                              port=int(settings.chroma_url.split(":")[-1]))
+        host = settings.chroma_url.replace("http://", "").replace("https://", "").split(":")[0]
+        port = int(settings.chroma_url.split(":")[-1])
+        _chroma_client = chromadb.HttpClient(host=host, port=port)
         _collection = _chroma_client.get_or_create_collection(
             name=settings.chroma_collection,
             metadata={"hnsw:space": "cosine"},
@@ -40,14 +46,6 @@ def _get_llm():
     return _llm
 
 
-def _get_embeddings():
-    global _embeddings
-    if _embeddings is None:
-        from sentence_transformers import SentenceTransformer
-        _embeddings = SentenceTransformer("all-MiniLM-L6-v2")
-    return _embeddings
-
-
 class RAGEngine:
     """Retrieval-Augmented Generation over the criminal knowledge graph."""
 
@@ -55,11 +53,9 @@ class RAGEngine:
         """Embed and store a document chunk in ChromaDB."""
         try:
             collection = _get_chroma()
-            emb_model  = _get_embeddings()
-            embedding  = emb_model.encode([text])[0].tolist()
+            # Let ChromaDB embed the document with its built-in embedding function
             collection.upsert(
                 documents=[text],
-                embeddings=[embedding],
                 ids=[doc_id],
                 metadatas=[metadata or {}],
             )
@@ -70,9 +66,7 @@ class RAGEngine:
         """Retrieve most relevant document chunks from ChromaDB."""
         try:
             collection = _get_chroma()
-            emb_model  = _get_embeddings()
-            q_emb      = emb_model.encode([query])[0].tolist()
-            results    = collection.query(query_embeddings=[q_emb], n_results=top_k)
+            results = collection.query(query_texts=[query], n_results=top_k)
             return results.get("documents", [[]])[0]
         except Exception as e:
             logger.warning(f"ChromaDB retrieve failed: {e}")
@@ -83,34 +77,42 @@ class RAGEngine:
         Search the Neo4j graph for entities matching the query and
         return a structured text summary of their connections.
         """
-        # Search entities
-        entity_records = await neo4j_client.search_entities(query, limit=5)
-        if not entity_records:
+        try:
+            # Search entities
+            entity_records = await neo4j_client.search_entities(query, limit=5)
+            if not entity_records:
+                return ""
+
+            context_parts = []
+            for rec in entity_records:
+                n = rec.get("n", {})
+                entity_id   = n.get("id", "")
+                entity_name = n.get("name", "Unknown")
+                labels      = rec.get("labels", [])
+
+                if not entity_id:
+                    continue
+
+                try:
+                    # Get neighbors
+                    neighbors = await neo4j_client.get_neighbors(entity_id, depth=1)
+                    neighbor_names = [nd.get("name", "") for nd in neighbors.get("nodes", [])
+                                      if nd.get("id") != entity_id][:10]
+                except Exception as e:
+                    logger.warning(f"Failed to get neighbors for {entity_id}: {e}")
+                    neighbor_names = []
+
+                context_parts.append(
+                    f"• {entity_name} [{', '.join(labels)}]:\n"
+                    f"  Known connections: {', '.join(neighbor_names) or 'None found'}\n"
+                    f"  Risk level: {n.get('risk_level', 'UNKNOWN')}\n"
+                    f"  PageRank: {n.get('pagerank', 'N/A')}"
+                )
+
+            return "\n\n".join(context_parts)
+        except Exception as e:
+            logger.warning(f"Graph context retrieval failed: {e}")
             return ""
-
-        context_parts = []
-        for rec in entity_records:
-            n = rec.get("n", {})
-            entity_id   = n.get("id", "")
-            entity_name = n.get("name", "Unknown")
-            labels      = rec.get("labels", [])
-
-            if not entity_id:
-                continue
-
-            # Get neighbors
-            neighbors = await neo4j_client.get_neighbors(entity_id, depth=1)
-            neighbor_names = [nd.get("name", "") for nd in neighbors.get("nodes", [])
-                              if nd.get("id") != entity_id][:10]
-
-            context_parts.append(
-                f"• {entity_name} [{', '.join(labels)}]:\n"
-                f"  Known connections: {', '.join(neighbor_names) or 'None found'}\n"
-                f"  Risk level: {n.get('risk_level', 'UNKNOWN')}\n"
-                f"  PageRank: {n.get('pagerank', 'N/A')}"
-            )
-
-        return "\n\n".join(context_parts)
 
     async def answer(self, question: str) -> Dict[str, Any]:
         """

@@ -1,0 +1,21 @@
+TRANSACTION_DATE,TRANSACTION_TIME,SENDER_NAME,SENDER_ACCOUNT,SENDER_BANK,RECEIVER_NAME,RECEIVER_ACCOUNT,RECEIVER_BANK,AMOUNT_INR,TRANSACTION_TYPE,NARRATION,LOCATION,STATUS,FLAGGED_REASON
+2024-03-10,22:50,Rajesh Patel,1234567890123456,HDFC Bank,Vikram Khan,9876543210987654,ICICI Bank,500000,Transfer,Payment for goods,Colaba Mumbai,Completed,Round Amount
+2024-03-10,23:15,Vikram Khan,9876543210987654,ICICI Bank,International Wire,WIRE-002-2024,HSBC Singapore,2500000,Wire Transfer,Business payment overseas,Bandra Mumbai,Completed,Suspicious Overseas Transfer
+2024-03-11,06:30,Arjun Desai,5555666677778888,Axis Bank,Rajesh Patel,1234567890123456,HDFC Bank,250000,Transfer,Reimbursement,Andheri Mumbai,Completed,NORMAL
+2024-03-11,08:00,Simran Sharma,3333444455556666,SBI,Money-Handler,8888999900001111,PNB,450000,Transfer,Inventory payment,Dadar Mumbai,Completed,NORMAL
+2024-03-11,14:45,Priya Khanna,7777888899990000,Kotak Bank,Rajesh Patel,1234567890123456,HDFC Bank,180000,Transfer,Commission payment,Thane Mumbai,Completed,NORMAL
+2024-03-11,16:20,Money-Handler,8888999900001111,PNB,Transport-Coordinator,2222333344445555,Bank of Baroda,320000,Transfer,Transportation charges,Dadar Mumbai,Completed,NORMAL
+2024-03-12,10:15,Vikram Khan,9876543210987654,ICICI Bank,Rajesh Patel,1234567890123456,HDFC Bank,750000,Transfer,Restocking payment,Bandra Mumbai,Completed,Large Round Amount
+2024-03-12,11:30,Unknown-Supplier,WIRE-001-2024,HSBC Singapore,Vikram Khan,9876543210987654,ICICI Bank,1800000,Wire Transfer,Product shipment payment,Unknown,Completed,High Value Overseas Transfer
+2024-03-12,15:00,Rajesh Patel,1234567890123456,HDFC Bank,Transport-Coordinator,2222333344445555,Bank of Baroda,380000,Transfer,Logistics payment,Colaba Mumbai,Completed,NORMAL
+2024-03-12,17:45,Simran Sharma,3333444455556666,SBI,Money-Handler,8888999900001111,PNB,550000,Transfer,Distribution network payment,Dadar Mumbai,Completed,NORMAL
+2024-03-13,06:30,Vikram Khan,9876543210987654,ICICI Bank,International Wire,WIRE-003-2024,Emirates NBD Dubai,3200000,Wire Transfer,Large business transaction,Bandra Mumbai,Completed,Very High Value Overseas
+2024-03-13,09:00,Rajesh Patel,1234567890123456,HDFC Bank,Arjun Desai,5555666677778888,Axis Bank,420000,Transfer,Supply payment,Colaba Mumbai,Completed,NORMAL
+2024-03-13,12:15,Money-Handler,8888999900001111,PNB,Rajesh Patel,1234567890123456,HDFC Bank,1200000,Transfer,Consolidated payment,Dadar Mumbai,Completed,Large Round Amount
+2024-03-13,14:30,Priya Khanna,7777888899990000,Kotak Bank,Simran Sharma,3333444455556666,SBI,290000,Transfer,Network dues,Thane Mumbai,Completed,NORMAL
+2024-03-14,07:00,Vikram Khan,9876543210987654,ICICI Bank,Unknown-Supplier,WIRE-001-2024,HSBC Singapore,4500000,Wire Transfer,Major supply order,Bandra Mumbai,Completed,Exceptionally High Value
+2024-03-14,09:30,Rajesh Patel,1234567890123456,HDFC Bank,Money-Handler,8888999900001111,PNB,680000,Transfer,Cash management,Colaba Mumbai,Completed,NORMAL
+2024-03-14,11:00,Transport-Coordinator,2222333344445555,Bank of Baroda,Rajesh Patel,1234567890123456,HDFC Bank,300000,Transfer,Delivery completed,Andheri Mumbai,Completed,NORMAL
+2024-03-14,13:45,Simran Sharma,3333444455556666,SBI,Arjun Desai,5555666677778888,Axis Bank,410000,Transfer,Regional distribution,Dadar Mumbai,Completed,NORMAL
+2024-03-14,16:00,Arjun Desai,5555666677778888,Axis Bank,Money-Handler,8888999900001111,PNB,560000,Transfer,Collection transfer,Andheri Mumbai,Completed,NORMAL
+2024-03-15,05:30,Vikram Khan,9876543210987654,ICICI Bank,Rajesh Patel,1234567890123456,HDFC Bank,890000,Transfer,Weekly settlement,Bandra Mumbai,Completed,Large Round Amount

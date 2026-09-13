@@ -1,0 +1,58 @@
+{
+  "cdr_records": [
+    {
+      "call_id": "CDR/2024/5678901",
+      "timestamp": "2024-01-14T14:25:33Z",
+      "caller_number": "+91-9876543210",
+      "callee_number": "+91-8765432109",
+      "duration_seconds": 180,
+      "call_type": "voice",
+      "tower_id": "MUM_N_002",
+      "tower_location": {
+        "lat": 19.0765,
+        "lng": 72.8780
+      },
+      "status": "completed",
+      "metadata": {
+        "service_provider": "Reliance Jio",
+        "roaming": false
+      }
+    },
+    {
+      "call_id": "CDR/2024/5678902",
+      "timestamp": "2024-01-14T16:45:12Z",
+      "caller_number": "+91-8765432109",
+      "callee_number": "+91-7654321098",
+      "duration_seconds": 420,
+      "call_type": "voice",
+      "tower_id": "MUM_S_015",
+      "tower_location": {
+        "lat": 18.9856,
+        "lng": 72.8299
+      },
+      "status": "completed",
+      "metadata": {
+        "service_provider": "Airtel",
+        "roaming": false
+      }
+    },
+    {
+      "call_id": "CDR/2024/5678903",
+      "timestamp": "2024-01-14T18:30:45Z",
+      "caller_number": "+91-9876543210",
+      "callee_number": "+91-7654321098",
+      "duration_seconds": 95,
+      "call_type": "voice",
+      "tower_id": "MUM_N_002",
+      "tower_location": {
+        "lat": 19.0765,
+        "lng": 72.8780
+      },
+      "status": "completed",
+      "metadata": {
+        "service_provider": "Reliance Jio",
+        "roaming": false
+      }
+    }
+  ]
+}

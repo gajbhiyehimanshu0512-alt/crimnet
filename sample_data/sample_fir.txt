@@ -1,0 +1,100 @@
+FIRST INFORMATION REPORT (FIR)
+===============================
+
+Case Number: FIR/2024/001234
+Report Date: 2024-03-15
+Police Station: Mumbai Central
+Officer Name: Rajesh Kumar
+Officer ID: MCS-5847
+
+INCIDENT DETAILS:
+================
+Incident Type: Drug Trafficking
+Date of Incident: 2024-03-10
+Time: 22:45 IST
+Location: Colaba, Mumbai
+Jurisdiction: Mumbai Police
+
+COMPLAINANT DETAILS:
+===================
+Name: Vikram Singh
+Contact: +91-9876543210
+Address: 42 Marine Drive, Mumbai, 400001
+Email: vikram.singh@email.com
+
+ACCUSED PERSONS:
+===============
+1. Name: Rajesh Patel
+   Alias: "Raj", "The Fox"
+   Age: 32
+   Address: Bandra, Mumbai
+   Phone: +91-9123456789
+   Known Associates: Arjun Desai, Simran Sharma
+   Previous Records: Drug possession (2019), Money laundering (2021)
+
+2. Name: Arjun Desai
+   Alias: "A-Boy"
+   Age: 28
+   Address: Andheri, Mumbai
+   Phone: +91-8765432109
+   Known Associates: Rajesh Patel, Priya Khanna
+   Previous Records: Drug trafficking (2018), Assault (2020)
+
+3. Name: Simran Sharma
+   Age: 26
+   Address: Dadar, Mumbai
+   Phone: +91-7654321098
+   Role: Distributor
+   Associated Organization: Khan Crime Syndicate
+
+INCIDENT DESCRIPTION:
+====================
+On 2024-03-10, at approximately 22:45 IST, officers conducted a raid at Colaba based on intelligence 
+about illegal drug distribution. The raid recovered:
+- 2.5 kg of heroin
+- Cash: Rs. 8,50,000
+- Mobile phones: 3 units (models specified below)
+- Drug paraphernalia
+
+The accused persons were found at the location attempting to flee. Vehicle MH01AB1234 was also seized.
+
+EVIDENCE COLLECTED:
+==================
+- Drugs: Heroin samples (2.5 kg) - Lab reference: HER-001-2024
+- Currency: Indian Rupees 8,50,000
+- Vehicles: Vehicle MH01AB1234 (Silver Honda Civic)
+- Electronics: iPhone 13, Samsung Galaxy S21, Redmi Note 10
+
+LOCATIONS MENTIONED:
+===================
+- Colaba, Mumbai (Primary crime scene)
+- Bandra, Mumbai (Rajesh Patel residence)
+- Andheri, Mumbai (Arjun Desai residence)
+- Dadar, Mumbai (Simran Sharma residence)
+- Gateway of India (Meeting location)
+
+FINANCIAL DETAILS:
+=================
+- Cash seized: Rs. 8,50,000
+- Estimated street value of drugs: Rs. 45,00,000
+- Vehicle value: Rs. 15,00,000
+
+ORGANIZATIONS MENTIONED:
+=======================
+- Khan Crime Syndicate (Suspected drug trafficking network)
+- Mumbai Central Police Station
+
+RELATED CASES:
+=============
+- FIR/2023/009876 (Related to Khan Syndicate operations)
+- FIR/2024/000999 (Money laundering by associated members)
+
+INVESTIGATING OFFICER NOTES:
+===========================
+Subject Rajesh Patel appears to be a key distributor for the Khan Crime Syndicate. 
+Financial transactions show regular transfers to offshore accounts. Phone records indicate 
+coordination with international suppliers. Recommend surveillance of Bandra location 
+for further network mapping.
+
+STATUS: Under Investigation
+Next hearing: 2024-04-10

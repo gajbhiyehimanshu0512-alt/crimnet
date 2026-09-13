@@ -1,0 +1,21 @@
+CALLER_ID,CALLER_NUMBER,RECEIVER_ID,RECEIVER_NUMBER,CALL_DATE,CALL_TIME,DURATION_SECONDS,CALL_TYPE,TOWER_LOCATION,CALLER_NAME,RECEIVER_NAME
+1,+919876543210,2,+918765432109,2024-03-10,22:15,245,Outgoing,Colaba Mumbai,Rajesh Patel,Arjun Desai
+2,+918765432109,3,+917654321098,2024-03-10,22:20,178,Outgoing,Andheri Mumbai,Arjun Desai,Simran Sharma
+3,+919876543210,4,+916543210987,2024-03-10,22:35,92,Outgoing,Colaba Mumbai,Rajesh Patel,Unknown-Supplier
+4,+918765432109,5,+915432109876,2024-03-11,06:15,34,Incoming,Andheri Mumbai,Arjun Desai,Priya Khanna
+5,+917654321098,1,+919876543210,2024-03-11,07:00,156,Incoming,Dadar Mumbai,Simran Sharma,Rajesh Patel
+6,+919876543210,6,+914321098765,2024-03-11,14:30,203,Outgoing,Bandra Mumbai,Rajesh Patel,Vikram Khan
+7,+918765432109,7,+913210987654,2024-03-11,15:45,67,Outgoing,Andheri Mumbai,Arjun Desai,Transport-Coordinator
+8,+917654321098,8,+912109876543,2024-03-11,18:20,289,Outgoing,Dadar Mumbai,Simran Sharma,Money-Handler
+9,+919876543210,2,+918765432109,2024-03-12,10:15,45,Incoming,Colaba Mumbai,Rajesh Patel,Arjun Desai
+10,+916543210987,1,+919876543210,2024-03-12,11:00,178,Incoming,Unknown Location,Unknown-Supplier,Rajesh Patel
+11,+919876543210,6,+914321098765,2024-03-12,19:30,212,Outgoing,Bandra Mumbai,Rajesh Patel,Vikram Khan
+12,+918765432109,4,+916543210987,2024-03-12,20:15,89,Outgoing,Andheri Mumbai,Arjun Desai,Unknown-Supplier
+13,+917654321098,5,+915432109876,2024-03-12,21:00,145,Incoming,Dadar Mumbai,Simran Sharma,Priya Khanna
+14,+914321098765,1,+919876543210,2024-03-13,08:30,334,Outgoing,Bandra Mumbai,Vikram Khan,Rajesh Patel
+15,+919876543210,8,+912109876543,2024-03-13,09:15,267,Outgoing,Colaba Mumbai,Rajesh Patel,Money-Handler
+16,+918765432109,2,+919876543210,2024-03-13,17:45,56,Incoming,Andheri Mumbai,Arjun Desai,Rajesh Patel
+17,+917654321098,1,+919876543210,2024-03-13,18:30,178,Outgoing,Dadar Mumbai,Simran Sharma,Rajesh Patel
+18,+919876543210,6,+914321098765,2024-03-14,06:00,445,Outgoing,Bandra Mumbai,Rajesh Patel,Vikram Khan
+19,+918765432109,3,+917654321098,2024-03-14,07:15,123,Incoming,Andheri Mumbai,Arjun Desai,Simran Sharma
+20,+916543210987,1,+919876543210,2024-03-14,14:20,89,Incoming,Unknown Location,Unknown-Supplier,Rajesh Patel

@@ -233,18 +233,5 @@ class CaseUpdate(BaseModel):
     tags: Optional[List[str]] = None
 
 
-class CaseResponse(BaseModel):
-    id: str
-    name: str
-    description: str
-    status: str
-    priority: str
-    assigned_to: Optional[str] = None
-    tags: List[str] = Field(default_factory=list)
-    entity_ids: List[str] = Field(default_factory=list)
-    created_at: Optional[str] = None
-    updated_at: Optional[str] = None
-
-
 class CaseEntityAdd(BaseModel):
     entity_id: str

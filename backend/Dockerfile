@@ -1,23 +1,52 @@
-FROM python:3.11-slim
+# Multi-stage build for FastAPI backend
+# Stage 1: Build
+FROM python:3.11-slim AS builder
 
 WORKDIR /app
 
-# System dependencies for spaCy and PDF parsing
-RUN apt-get update && apt-get install -y \
+# Install system dependencies needed for build
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
+# Copy requirements and build wheels (layer caching)
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.txt
 
-# Download spaCy model (small, always available)
-RUN python -m spacy download en_core_web_sm
+# Stage 2: Runtime
+FROM python:3.11-slim
 
-COPY . .
+WORKDIR /app
 
-RUN mkdir -p uploads
+# Install only runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq5 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy wheels from builder
+COPY --from=builder /app/wheels /wheels
+COPY --from=builder /app/requirements.txt .
+
+# Install Python packages from wheels (fast, no compilation)
+RUN pip install --no-cache /wheels/*
+
+# Create non-root user for security
+RUN useradd -m -u 1000 appuser
+
+# Copy application code
+COPY --chown=appuser:appuser . .
+
+# Create uploads directory
+RUN mkdir -p uploads && chown -R appuser:appuser /app
+
+# Switch to non-root user
+USER appuser
 
 EXPOSE 8000
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=5)"
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]

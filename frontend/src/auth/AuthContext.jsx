@@ -8,8 +8,8 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     if (token) {
-      // Validate token by calling /api/auth/me
-      fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/auth/me`, {
+      // Validate token — use relative URL so Vite proxy handles routing
+      fetch('/api/auth/me', {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then(r => r.ok ? r.json() : Promise.reject())
@@ -19,7 +19,7 @@ export function AuthProvider({ children }) {
   }, [token])
 
   const login = async (username, password) => {
-    const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/auth/login`, {
+    const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),

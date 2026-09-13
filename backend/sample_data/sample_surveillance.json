@@ -1,0 +1,68 @@
+{
+  "surveillance_events": [
+    {
+      "event_id": "SURV/2024/8901",
+      "timestamp": "2024-01-14T10:15:00Z",
+      "camera_id": "CAM_AIRPORT_T3_B12",
+      "camera_location": {
+        "building": "Mumbai International Airport Terminal 3",
+        "section": "Immigration Area B",
+        "lat": 19.0887,
+        "lng": 72.8679
+      },
+      "event_type": "person_detected",
+      "persons_detected": [
+        {
+          "person_id": "PERSON/2024/5001",
+          "confidence": 0.94,
+          "face_match": "Rajesh Kumar Singh",
+          "associated_fir": "FIR/2024/001234",
+          "time_in_frame": "120 seconds"
+        }
+      ],
+      "objects_detected": [
+        {
+          "type": "luggage",
+          "count": 2,
+          "description": "Large black suitcases"
+        }
+      ],
+      "metadata": {
+        "camera_type": "AI_ENABLED",
+        "resolution": "4K",
+        "detection_model": "YOLOv8"
+      }
+    },
+    {
+      "event_id": "SURV/2024/8902",
+      "timestamp": "2024-01-14T15:45:00Z",
+      "camera_id": "CAM_HOTEL_GRAND_LOBBY",
+      "camera_location": {
+        "building": "Grand Plaza Hotel Mumbai",
+        "section": "Main Lobby",
+        "lat": 19.0760,
+        "lng": 72.8777
+      },
+      "event_type": "group_meeting",
+      "persons_detected": [
+        {
+          "person_id": "PERSON/2024/5001",
+          "confidence": 0.87,
+          "face_match": "Rajesh Kumar Singh"
+        },
+        {
+          "person_id": "PERSON/2024/5002",
+          "confidence": 0.91,
+          "face_match": "Priya Sharma"
+        },
+        {
+          "person_id": "PERSON/2024/5003",
+          "confidence": 0.78,
+          "face_match": "Unknown Person"
+        }
+      ],
+      "interaction_duration": "45 minutes",
+      "note": "Three individuals met, exchanged briefcase"
+    }
+  ]
+}

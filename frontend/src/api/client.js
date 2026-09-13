@@ -28,13 +28,6 @@ api.interceptors.response.use(
   },
 )
 
-// ── Auth ─────────────────────────────────────────────────────────────────────
-
-export const login = (username, password) =>
-  api.post('/api/auth/login', { username, password })
-
-export const getMe = () => api.get('/api/auth/me')
-
 // ── Graph ─────────────────────────────────────────────────────────────────────
 
 export const getGraphStats   = ()           => api.get('/api/graph/stats')
@@ -76,4 +69,3 @@ export const deleteCase         = (id)          => api.delete(`/api/cases/${id}`
 export const addCaseEntity      = (caseId, data)=> api.post(`/api/cases/${caseId}/entities`, data)
 export const removeCaseEntity   = (caseId, eid) => api.delete(`/api/cases/${caseId}/entities/${eid}`)
 
-export default api

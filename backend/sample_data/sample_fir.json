@@ -1,0 +1,41 @@
+{
+  "fir_id": "FIR/2024/001234",
+  "date_filed": "2024-01-15T10:30:00Z",
+  "case_status": "under_investigation",
+  "crime_type": "organized_crime",
+  "severity": "high",
+  "location": {
+    "city": "Mumbai",
+    "district": "Mumbai North",
+    "coordinates": {
+      "lat": 19.0760,
+      "lng": 72.8777
+    }
+  },
+  "primary_suspect": {
+    "name": "Rajesh Kumar Singh",
+    "age": 45,
+    "passport_number": "J1234567",
+    "phone_numbers": ["+91-9876543210", "+91-9123456789"],
+    "email": "rsingh.biz@email.com",
+    "aliases": ["RK", "Rajesh Verma"]
+  },
+  "co_suspects": [
+    {
+      "name": "Priya Sharma",
+      "relationship": "associate",
+      "phone": "+91-8765432109"
+    },
+    {
+      "name": "Mohammed Hassan",
+      "relationship": "financial_liaison",
+      "phone": "+91-7654321098"
+    }
+  ],
+  "description": "Illegal import of contraband goods worth ₹50 lakhs. Suspects involved in international smuggling network.",
+  "evidence_files": [
+    "surveillance_footage_01.mp4",
+    "intercepted_communications.txt",
+    "transaction_records.pdf"
+  ]
+}

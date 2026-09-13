@@ -1,0 +1,47 @@
+{
+  "financial_transactions": [
+    {
+      "transaction_id": "TXN/2024/001001",
+      "timestamp": "2024-01-12T11:20:00Z",
+      "account_number": "5847XXXXXX321",
+      "account_holder": "Rajesh Kumar Singh",
+      "transaction_type": "wire_transfer",
+      "amount": 500000,
+      "currency": "INR",
+      "beneficiary": {
+        "name": "International Trade Ltd",
+        "bank": "HSBC Dubai",
+        "account": "AE12XXXX0001"
+      },
+      "description": "Import of machinery parts",
+      "risk_flag": "high",
+      "reason": "Large international transfer, possible structuring"
+    },
+    {
+      "transaction_id": "TXN/2024/001002",
+      "timestamp": "2024-01-13T09:15:00Z",
+      "account_number": "5847XXXXXX321",
+      "account_holder": "Rajesh Kumar Singh",
+      "transaction_type": "cash_withdrawal",
+      "amount": 200000,
+      "currency": "INR",
+      "location": "ATM_MUM_N_004",
+      "description": null,
+      "risk_flag": "medium",
+      "reason": "Large cash withdrawal"
+    },
+    {
+      "transaction_id": "TXN/2024/001003",
+      "timestamp": "2024-01-13T14:30:00Z",
+      "account_number": "PRIA SHARMA ACC",
+      "account_holder": "Priya Sharma",
+      "transaction_type": "cash_deposit",
+      "amount": 150000,
+      "currency": "INR",
+      "location": "BRANCH_MUM_CENTRAL",
+      "description": null,
+      "risk_flag": "high",
+      "reason": "Deposit from account linked to suspect network"
+    }
+  ]
+}

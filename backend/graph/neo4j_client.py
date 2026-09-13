@@ -150,11 +150,19 @@ class Neo4jClient:
             for n in row["nodes"]:
                 nodes[n["id"]] = dict(n)
             for r in row["rels"]:
-                eid = f"{r.start_node['id']}__{r.end_node['id']}__{r.type}"
+                # r is a Relationship object; safely extract properties
+                try:
+                    start_id = r.start_node.get("id") or r.start_node["id"]
+                    end_id = r.end_node.get("id") or r.end_node["id"]
+                    rel_type = r.type
+                except (AttributeError, TypeError, KeyError):
+                    # Fallback if r is malformed
+                    continue
+                eid = f"{start_id}__{end_id}__{rel_type}"
                 edges[eid] = {
-                    "source": r.start_node["id"],
-                    "target": r.end_node["id"],
-                    "type": r.type,
+                    "source": start_id,
+                    "target": end_id,
+                    "type": rel_type,
                     **dict(r),
                 }
         return {"nodes": list(nodes.values()), "edges": list(edges.values())}
@@ -175,6 +183,7 @@ class Neo4jClient:
         MATCH (n)
         WITH n LIMIT {limit}
         OPTIONAL MATCH (n)-[r]->(m)
+        WHERE m IS NOT NULL
         RETURN collect(DISTINCT {{
             id: n.id, name: n.name, labels: labels(n),
             risk_level: n.risk_level, community_id: n.community_id,
@@ -187,7 +196,9 @@ class Neo4jClient:
         records = await self.run(query)
         if not records:
             return {"nodes": [], "edges": []}
-        return {"nodes": records[0]["nodes"], "edges": records[0]["edges"]}
+        nodes = records[0]["nodes"]
+        edges = [e for e in records[0]["edges"] if e.get("source") and e.get("target")]
+        return {"nodes": nodes, "edges": edges}
 
     async def get_community_nodes(self, community_id: int) -> List[Dict]:
         """Get all nodes in a specific community."""
@@ -211,8 +222,7 @@ class Neo4jClient:
         """Write analytics results (centrality, risk) back onto a node."""
         set_items = ", ".join(f"n.{k} = ${k}" for k in analytics)
         query = f"MATCH (n {{id: $id}}) SET {set_items}"
-        await self.run({"id": entity_id, **analytics} if False else query,
-                       {"id": entity_id, **analytics})
+        await self.run(query, {"id": entity_id, **analytics})
 
     async def get_all_nodes_for_analytics(self) -> List[Dict]:
         """Fetch all nodes (id, labels, name) for graph analytics."""

@@ -1,10 +1,12 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import { Shield, Loader2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export default function Login() {
   const { login } = useAuth()
+  const navigate = useNavigate()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -15,6 +17,7 @@ export default function Login() {
     try {
       await login(username, password)
       toast.success('Login successful')
+      navigate('/dashboard', { replace: true })
     } catch (err) {
       toast.error(err.message || 'Login failed')
     } finally {
