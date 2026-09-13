@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './auth/AuthContext'
+import ErrorBoundary from './components/ErrorBoundary'
 import Sidebar from './components/Sidebar'
 import Dashboard from './pages/Dashboard'
 import GraphView from './pages/GraphView'
@@ -39,10 +40,12 @@ function DashboardLayout() {
 export default function App() {
   return (
     <AuthProvider>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/*" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>} />
-      </Routes>
+      <ErrorBoundary>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/*" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>} />
+        </Routes>
+      </ErrorBoundary>
     </AuthProvider>
   )
 }

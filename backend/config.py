@@ -3,6 +3,7 @@ config.py — Application-wide configuration loaded from environment variables.
 All settings have sensible defaults for local development.
 """
 
+import secrets
 from pydantic_settings import BaseSettings
 from functools import lru_cache
 from typing import Optional
@@ -11,7 +12,7 @@ from typing import Optional
 class Settings(BaseSettings):
     # ── App ────────────────────────────────────────────────────────────────────
     app_env: str = "development"
-    secret_key: str = "dev-secret-key-change-in-production"
+    secret_key: str = ""  # Generated at startup if empty
     upload_dir: str = "./uploads"
     max_upload_mb: int = 50
 
@@ -48,7 +49,11 @@ class Settings(BaseSettings):
 @lru_cache()
 def get_settings() -> Settings:
     """Returns a cached singleton of Settings."""
-    return Settings()
+    s = Settings()
+    # Generate a random secret key if none was provided via env
+    if not s.secret_key:
+        s.secret_key = secrets.token_urlsafe(64)
+    return s
 
 
 settings = get_settings()

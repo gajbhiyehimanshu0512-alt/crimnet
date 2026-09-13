@@ -66,19 +66,39 @@ app.add_middleware(
 
 PUBLIC_PREFIXES = ("/api/auth", "/health")
 
+# In production, docs endpoints require authentication
+IS_PRODUCTION = settings.app_env.lower() in ("production", "prod")
+
 
 @app.middleware("http")
 async def auth_middleware(request: Request, call_next):
     path = request.url.path
-    # Allow CORS preflight, public endpoints, and Swagger/ReDoc docs
+    # Always allow CORS preflight, health, and public API prefixes
     if (
         request.method == "OPTIONS"
-        or path.startswith("/docs")
-        or path.startswith("/redoc")
-        or path.startswith("/openapi.json")
         or path == "/health"
         or any(path.startswith(p) for p in PUBLIC_PREFIXES)
     ):
+        return await call_next(request)
+
+    # In production, gate docs behind authentication
+    docs_paths = ("/docs", "/redoc", "/openapi.json")
+    if IS_PRODUCTION and any(path.startswith(d) for d in docs_paths):
+        auth_header = request.headers.get("Authorization", "")
+        if not auth_header.startswith("Bearer "):
+            return JSONResponse(status_code=401, content={"detail": "Authentication required to access API docs"})
+        token = auth_header.split(" ", 1)[1]
+        try:
+            payload = decode_access_token(token)
+            sub = payload.get("sub")
+            if sub is None or not get_user(sub):
+                return JSONResponse(status_code=401, content={"detail": "Invalid token"})
+        except JWTError:
+            return JSONResponse(status_code=401, content={"detail": "Invalid or expired token"})
+        return await call_next(request)
+
+    # In development, allow docs without auth
+    if not IS_PRODUCTION and any(path.startswith(d) for d in docs_paths):
         return await call_next(request)
 
     auth_header = request.headers.get("Authorization", "")

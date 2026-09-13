@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getGraphStats, getInfluencers, getAnomalies, runAnalytics } from '../api/client'
+import LoadingSpinner from '../components/LoadingSpinner'
 import { Users, MapPin, Phone, Car, AlertTriangle, Network, TrendingUp, Zap } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import toast from 'react-hot-toast'
@@ -40,13 +41,15 @@ export default function Dashboard() {
   const [influencers, setInfluencers] = useState([])
   const [alerts, setAlerts] = useState([])
   const [running, setRunning] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    setLoading(true)
     Promise.all([
       getGraphStats().then(r => setStats(r.data)).catch(() => {}),
       getInfluencers(10).then(r => setInfluencers(r.data.influencers || [])).catch(() => {}),
       getAnomalies().then(r => setAlerts(r.data.alerts || [])).catch(() => {}),
-    ])
+    ]).finally(() => setLoading(false))
   }, [])
 
   const handleRunAnalytics = async () => {
@@ -88,6 +91,9 @@ export default function Dashboard() {
       </div>
 
       {/* Stats Grid */}
+      {loading ? (
+        <LoadingSpinner message="Loading dashboard data…" />
+      ) : (
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard icon={Users}         label="Total Persons"     value={stats?.persons}       color="text-blue-400" />
         <StatCard icon={Network}       label="Organizations"     value={stats?.organizations}  color="text-purple-400" />
@@ -98,6 +104,7 @@ export default function Dashboard() {
         <StatCard icon={AlertTriangle} label="Critical Risk"     value={stats?.critical_risk}  color="text-red-400" />
         <StatCard icon={AlertTriangle} label="High Risk"         value={stats?.high_risk}      color="text-orange-400" />
       </div>
+      )}
 
       {/* Bottom grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
