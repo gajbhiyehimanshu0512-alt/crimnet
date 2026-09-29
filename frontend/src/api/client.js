@@ -68,4 +68,3 @@ export const updateCase         = (id, data)    => api.put(`/api/cases/${id}`, d
 export const deleteCase         = (id)          => api.delete(`/api/cases/${id}`)
 export const addCaseEntity      = (caseId, data)=> api.post(`/api/cases/${caseId}/entities`, data)
 export const removeCaseEntity   = (caseId, eid) => api.delete(`/api/cases/${caseId}/entities/${eid}`)
-

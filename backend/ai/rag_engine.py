@@ -1,7 +1,8 @@
 """
 ai/rag_engine.py — Graph RAG (Retrieval-Augmented Generation) engine.
-Combines Neo4j graph context with ChromaDB vector search and an Ollama
-local LLM to answer investigator natural-language queries.
+Combines Neo4j graph context with ChromaDB vector search and an LLM
+(Groq cloud API → OpenAI → Ollama, in priority order) to answer
+investigator natural-language queries.
 """
 
 import logging
@@ -21,28 +22,69 @@ _llm           = None
 def _get_chroma():
     """
     Get (or create) the ChromaDB collection.
-    Uses ChromaDB's built-in default embedding function (ONNX MiniLM),
-    which ships with the chromadb package itself — no torch / sentence-transformers
-    dependency required, keeping the backend image lightweight.
+    Returns None if ChromaDB is disabled (USE_CHROMA=false).
     """
     global _chroma_client, _collection
+    if not settings.use_chroma:
+        return None
     if _chroma_client is None:
-        import chromadb
-        host = settings.chroma_url.replace("http://", "").replace("https://", "").split(":")[0]
-        port = int(settings.chroma_url.split(":")[-1])
-        _chroma_client = chromadb.HttpClient(host=host, port=port)
-        _collection = _chroma_client.get_or_create_collection(
-            name=settings.chroma_collection,
-            metadata={"hnsw:space": "cosine"},
-        )
+        try:
+            import chromadb
+            host = settings.chroma_url.replace("http://", "").replace("https://", "").split(":")[0]
+            port = int(settings.chroma_url.split(":")[-1])
+            _chroma_client = chromadb.HttpClient(host=host, port=port)
+            _collection = _chroma_client.get_or_create_collection(
+                name=settings.chroma_collection,
+                metadata={"hnsw:space": "cosine"},
+            )
+        except Exception as e:
+            logger.warning(f"ChromaDB connection failed (non-fatal): {e}")
+            return None
     return _collection
 
 
 def _get_llm():
+    """
+    Get the LLM client, choosing provider by priority:
+    1. Groq (free, fast cloud API) — if GROQ_API_KEY is set
+    2. OpenAI — if OPENAI_API_KEY is set
+    3. Ollama — local fallback
+    """
     global _llm
-    if _llm is None:
+    if _llm is not None:
+        return _llm
+
+    provider = settings.llm_provider
+    logger.info(f"Initializing LLM provider: {provider}")
+
+    if provider == "groq":
+        from groq import Groq
+        client = Groq(api_key=settings.groq_api_key)
+
+        class GroqLLM:
+            def invoke(self, prompt: str) -> str:
+                response = client.chat.completions.create(
+                    model=settings.groq_model,
+                    messages=[{"role": "user", "content": prompt}],
+                    max_tokens=1024,
+                    temperature=0.1,
+                )
+                return response.choices[0].message.content
+
+        _llm = GroqLLM()
+
+    elif provider == "openai":
+        from langchain_openai import ChatOpenAI
+        _llm = ChatOpenAI(
+            api_key=settings.openai_api_key,
+            model="gpt-4o-mini",
+            temperature=0.1,
+        )
+
+    else:
         from langchain_ollama import OllamaLLM
         _llm = OllamaLLM(base_url=settings.ollama_url, model=settings.ollama_model)
+
     return _llm
 
 
@@ -53,7 +95,8 @@ class RAGEngine:
         """Embed and store a document chunk in ChromaDB."""
         try:
             collection = _get_chroma()
-            # Let ChromaDB embed the document with its built-in embedding function
+            if collection is None:
+                return
             collection.upsert(
                 documents=[text],
                 ids=[doc_id],
@@ -66,6 +109,8 @@ class RAGEngine:
         """Retrieve most relevant document chunks from ChromaDB."""
         try:
             collection = _get_chroma()
+            if collection is None:
+                return []
             results = collection.query(query_texts=[query], n_results=top_k)
             return results.get("documents", [[]])[0]
         except Exception as e:
@@ -78,7 +123,6 @@ class RAGEngine:
         return a structured text summary of their connections.
         """
         try:
-            # Search entities
             entity_records = await neo4j_client.search_entities(query, limit=5)
             if not entity_records:
                 return ""
@@ -94,7 +138,6 @@ class RAGEngine:
                     continue
 
                 try:
-                    # Get neighbors
                     neighbors = await neo4j_client.get_neighbors(entity_id, depth=1)
                     neighbor_names = [nd.get("name", "") for nd in neighbors.get("nodes", [])
                                       if nd.get("id") != entity_id][:10]
@@ -121,7 +164,7 @@ class RAGEngine:
         Steps:
         1. Retrieve relevant documents from ChromaDB (vector search)
         2. Retrieve graph context from Neo4j (entity + relationship info)
-        3. Combine context and query the LLM
+        3. Combine context and query the LLM (Groq / OpenAI / Ollama)
         4. Return answer with cited sources
         """
         try:
@@ -147,27 +190,33 @@ If you cannot answer from the context, say "Insufficient intelligence data."
 === INVESTIGATOR QUESTION ===
 {question}
 
-=== ANALYTICAL RESPONSE ==="""
+=== ANALYTICAL RESPONSE =="""
 
             llm = _get_llm()
-            answer_text = llm.invoke(prompt)
+            # Support both langchain-style and direct invoke
+            if hasattr(llm, 'invoke'):
+                answer_text = llm.invoke(prompt)
+                if hasattr(answer_text, 'content'):
+                    answer_text = answer_text.content
+            else:
+                answer_text = str(llm)
 
             return {
                 "question": question,
                 "answer": answer_text,
                 "graph_entities_used": graph_ctx[:500] if graph_ctx else "",
                 "documents_used": len(doc_chunks),
-                "model": settings.ollama_model,
+                "model": f"{settings.llm_provider}:{settings.groq_model if settings.llm_provider == 'groq' else settings.ollama_model}",
             }
 
         except Exception as e:
             logger.error(f"RAG answer failed: {e}")
             return {
                 "question": question,
-                "answer": f"LLM unavailable: {str(e)}. Ensure Ollama is running with model '{settings.ollama_model}'.",
+                "answer": f"LLM unavailable: {str(e)}. Set GROQ_API_KEY env variable for cloud AI, or ensure Ollama is running locally.",
                 "graph_entities_used": "",
                 "documents_used": 0,
-                "model": settings.ollama_model,
+                "model": settings.llm_provider,
             }
 
 
