@@ -40,12 +40,17 @@ class Neo4jClient:
     _driver: Optional[AsyncDriver] = None
 
     async def connect(self):
-        self._driver = AsyncGraphDatabase.driver(
-            settings.neo4j_url,
-            auth=(settings.neo4j_user, settings.neo4j_password),
-            max_connection_pool_size=50,
-        )
-        logger.info("Neo4j driver initialised.")
+        try:
+            self._driver = AsyncGraphDatabase.driver(
+                settings.neo4j_url,
+                auth=(settings.neo4j_user, settings.neo4j_password),
+                max_connection_pool_size=50,
+                connection_timeout=5.0,
+            )
+            logger.info("Neo4j driver initialised.")
+        except Exception as e:
+            logger.warning(f"Failed to create Neo4j driver: {e}")
+            self._driver = None
 
     async def close(self):
         if self._driver:
@@ -54,13 +59,27 @@ class Neo4jClient:
 
     async def init_constraints(self):
         """Create uniqueness constraints and indexes on startup."""
-        async with self._driver.session() as session:
-            for stmt in CONSTRAINTS + INDEXES:
-                try:
-                    await session.run(stmt)
-                except Exception as e:
-                    logger.warning(f"Constraint/index (may already exist): {e}")
-        logger.info("Neo4j schema constraints and indexes ready.")
+        if not self._driver:
+            logger.warning("Neo4j driver not initialized, skipping constraints.")
+            return
+
+        try:
+            await self._driver.verify_connectivity()
+        except Exception as e:
+            logger.warning(f"Neo4j not reachable on startup ({e}). Constraints will be initialized when Neo4j is available.")
+            return
+
+        try:
+            async with self._driver.session() as session:
+                for stmt in CONSTRAINTS + INDEXES:
+                    try:
+                        result = await session.run(stmt)
+                        await result.consume()
+                    except Exception as e:
+                        logger.warning(f"Constraint/index (may already exist): {e}")
+            logger.info("Neo4j schema constraints and indexes ready.")
+        except Exception as e:
+            logger.warning(f"Error during constraint initialization: {e}")
 
     # ── Core Query Helpers ────────────────────────────────────────────────────
 

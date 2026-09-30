@@ -1,0 +1,93 @@
+SOCIAL MEDIA INTELLIGENCE REPORT
+=================================
+Report No.: SOCMINT-2024-034
+Date Compiled: 15/08/2024
+Source: Open Source Intelligence (OSINT) - Twitter/X, Telegram, Instagram
+Analyst: Cyber Crime Cell, Mumbai
+
+SUBJECT PROFILES IDENTIFIED:
+-----------------------------
+
+Handle: @rajan_bhai_official
+Platform: Telegram (Private Channel - 1,247 members)
+Name Referenced: Rajan Sharma
+Location mentioned: Dharavi, Mumbai
+Activity: Channel used for coordination. Posts include coded language.
+Sample messages:
+- "माल ready है। Kurla warehouse पर मिलो। 8 बजे." (Goods ready. Meet at Kurla warehouse. 8 PM.)
+- "Delhi waale ko bata do, shipment on the way."
+- "Priya ko call karo. Number: 9123456789"
+
+Handle: @vikramnair_vn
+Platform: Instagram
+Real name: Vikram Nair
+Followers: 312
+Location: Andheri, Mumbai
+Posts: Photos from Dharavi, Andheri Safe House, Kurla area.
+        Frequent posts with tag #MumbaiNights #Business
+Associated handles mentioned: @rajan_bhai_official, @priya_d_mumbai
+Phone visible in story: 9000000042
+
+Handle: @priya_d_mumbai  
+Platform: Instagram
+Real name: Priya Desai
+Followers: 891
+Location: Kurla, Mumbai
+Bio: "Businesswoman | Mumbai"
+Mentioned in same posts as @vikramnair_vn and @rajan_bhai_official
+
+Handle: @delhi_karim_bhai
+Platform: Telegram
+Name Referenced: Abdul Karim
+Location: Delhi, Jahangirpuri
+Activity: Coordinates with Mumbai network.
+Sample messages:
+- "Mumbai se maal aaya. Salim ko bhejo collection ke liye."
+- "Farhan bhai, account mein paisa dal do: 50100234567890"
+- "Punjab waale ka number: 9876001122"
+Contact number shared in channel: 9811001122
+
+Handle: @gurpreet_singh_pb
+Platform: WhatsApp broadcast (leaked)
+Real name: Gurpreet Singh  
+Location: Ludhiana, Punjab / Amritsar border area
+Phone: 9876001122
+Activity: Coordinates supply chain from Punjab to Mumbai.
+Messages recovered:
+- "Shipment dispatched. Vehicle PB10AB5566 is carrying goods."
+- "Hawala payment received from Delhi. Karim confirmed."
+- "Rajan bhai ko bata do, next batch is 6 kg."
+
+HASHTAGS ASSOCIATED WITH NETWORK:
+- #MumbaiNights
+- #BusinessOpportunity  
+- #DharaviStrong
+
+URLS FOUND:
+- https://t.me/rajanbhaiofficial (Telegram group - now deleted)
+- https://t.me/delhikarimbhai (Telegram group - active)
+
+PHONES IDENTIFIED FROM SOCIAL MEDIA:
+- 9876543210 (Rajan Sharma - confirmed)
+- 9123456789 (Priya Desai - confirmed)
+- 9000000042 (Vikram Nair - confirmed)
+- 9811001122 (Abdul Karim - Delhi)
+- 9876001122 (Gurpreet Singh - Punjab)
+- 9988776655 (Unknown handler - possible alias "Delhi Contact")
+
+VEHICLES SPOTTED IN POSTS:
+- MH04CD5678 (Rajan Sharma's SUV - multiple posts)
+- PB10AB5566 (Punjab supply vehicle - mentioned in messages)
+
+ANALYST NOTES:
+--------------
+The Telegram channels show clear operational coordination between:
+1. Mumbai syndicate (Rajan Sharma network)
+2. Delhi extortion gang (Abdul Karim network)  
+3. Punjab supply chain (Gurpreet Singh network)
+
+Recommend interception warrants for all phones listed above.
+Recommend cyber warrant for @delhi_karim_bhai Telegram channel.
+
+Compiled by: Cyber Crime Cell, Mumbai
+Classification: CONFIDENTIAL - For Law Enforcement Use Only

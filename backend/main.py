@@ -50,6 +50,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+<<<<<<< HEAD
 # ── CORS ──────────────────────────────────────────────────────────────────────
 
 app.add_middleware(
@@ -60,6 +61,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+=======
+>>>>>>> e2ad6f2 (fix: allow public tunnel hosts and mock ingestion endpoints)
 # ── Auth-protected paths ──────────────────────────────────────────────────────
 # All /api/* routes except /api/auth/* require a valid JWT Bearer token.
 # /health and /api/auth/* are public.
@@ -115,6 +118,30 @@ async def auth_middleware(request: Request, call_next):
         return JSONResponse(status_code=401, content={"detail": "Invalid or expired token"})
 
     return await call_next(request)
+
+
+# ── CORS ──────────────────────────────────────────────────────────────────────
+# Added AFTER auth_middleware so it wraps the entire middleware stack and ensures
+# CORS headers (e.g. Access-Control-Allow-Origin) are present on ALL responses,
+# including 401s, 403s, and 500s returned by inner middlewares.
+
+_LOCAL_ORIGIN = r"https?://(localhost|127\.0\.0\.1)(:\d+)?"
+_EXTRA_ORIGINS = [o.strip() for o in settings.cors_origins.split(",") if o.strip()]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+        *_EXTRA_ORIGINS,
+    ],
+    allow_origin_regex=_LOCAL_ORIGIN,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # ── Routers ───────────────────────────────────────────────────────────────────

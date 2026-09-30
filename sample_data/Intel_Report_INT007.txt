@@ -1,0 +1,87 @@
+INTELLIGENCE REPORT — FREE TEXT
+================================
+Report No.: INT-2024-MUM-007
+Classification: SECRET
+Date: 20/08/2024
+Source: Confidential Human Intelligence (CHINT) — Source code: PHOENIX-3
+
+SUMMARY:
+--------
+Source PHOENIX-3, a trusted informant with direct access to the Mumbai drug syndicate, 
+has provided the following intelligence during a debriefing session on 18/08/2024.
+
+CRIMINAL NETWORK STRUCTURE:
+----------------------------
+Rajan Sharma (aka Rajan Bhai) is the KINGPIN of a multi-city narcotics and hawala 
+network. He is headquartered in Dharavi, Mumbai but travels frequently to Delhi and 
+Amritsar. Rajan Sharma has been in this business since 2017.
+
+His HANDLER for the Delhi connection is a person known as "Delhi Don" — real name 
+believed to be Abdul Karim, who operates from Jahangirpuri area of Delhi. Abdul Karim 
+commands an extortion gang called "Delhi Daggers" with enforcers including Salim Khan.
+
+The FINANCIAL BACKBONE of the network is provided by Gurpreet Singh, who runs a 
+hawala operation from Ludhiana. Gurpreet Singh is connected to border networks near 
+Amritsar and is believed to use front companies including "Punjab Hawala House" 
+and "Golden Star Exports" for laundering funds.
+
+KEY NODES:
+----------
+- Rajan Sharma: Command and control. Phone: 9876543210
+- Priya Desai: Rajan's trusted associate and liaison. Phone: 9123456789
+- Mohan Pillai: Courier / logistics. Phone: 9871111111
+- Vikram Nair: Financial transactions and hawala intermediary. Absconding.
+- Abdul Karim: Delhi connection. Phone: 9811001122
+- Salim Khan: Enforcer for Abdul Karim. Phone: 9799887766
+- Farhan Sheikh: Collection agent / broker for Delhi gang. Phone: 9911223344
+- Gurpreet Singh: Punjab hawala kingpin. Phone: 9876001122
+
+LOCATIONS OF INTEREST:
+-----------------------
+- Kurla West Warehouse: Primary storage and handover point for narcotics (Mumbai)
+- Dharavi, Mumbai: Rajan Sharma's base of operations
+- Andheri Safe House, MIDC: Rajan Sharma's emergency hideout. Address: Plot 44, MIDC, Andheri
+- Azadpur Mandi, Delhi: Meeting point for Delhi gang  
+- Old Delhi Market: Hawala payment collection point
+- Ludhiana Industrial Area: Gurpreet Singh's warehouse / hawala hub
+- Amritsar Border Zone: Cross-border narcotics entry point
+
+SUSPICIOUS ACTIVITIES:
+-----------------------
+1. HAWALA OPERATIONS: Large round-figure transfers (Rs 1,00,000 multiples) between 
+   accounts suggest systematic hawala structuring to avoid detection thresholds.
+   
+2. NIGHT-TIME COMMUNICATIONS: Source confirms that critical operational calls are made 
+   between 01:00 and 04:00 hours to avoid interception.
+   
+3. VEHICLE RELAY: Vehicles are switched at predetermined points. MH04CD5678 was seen 
+   transferring consignment to PB10AB5566 near Vasai road on 08/08/2024.
+
+4. SHELL COMPANY: "Galaxy Trading Co." is used by Rajan Sharma to register vehicles 
+   and receive hawala payments. Company address is fake.
+
+INTER-NETWORK LINKS:
+---------------------
+The three criminal networks (Mumbai, Delhi, Punjab) are interconnected:
+- Mumbai → Delhi: Drug supply channel (Rajan ↔ Abdul Karim via phone 9988776655)
+- Delhi → Punjab: Hawala money transfer (Abdul Karim → Gurpreet Singh)
+- Punjab → Mumbai: Narcotics supply (Gurpreet Singh → Rajan Sharma via courier)
+
+A Hyderabad-based cybercrime group led by Kiran Reddy (phone: 9900112233) has been 
+contracted to provide encrypted communication tools to the network. Kiran Reddy's 
+associate Srinivas Rao (tech specialist) maintains the Telegram channels.
+
+RECOMMENDED ACTIONS:
+---------------------
+1. Immediate arrest warrant for Vikram Nair (absconding).
+2. Financial investigation on account 50100234567890 (HDFC Bank).
+3. Raid on Andheri Safe House, Plot 44, MIDC.
+4. Interception warrant for phone 9988776655 (unknown Delhi handler).
+5. Coordinate with Punjab Police regarding Gurpreet Singh.
+6. ED referral for money laundering investigation.
+
+Source credibility: HIGH (5 previous actionable tips, all verified)
+
+Handled by: Senior Inspector Arvind Mehta
+Date: 20/08/2024
+Distribution: ACP Crime, Special Branch, ED Liaison
