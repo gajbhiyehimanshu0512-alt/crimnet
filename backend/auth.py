@@ -8,7 +8,7 @@ import logging
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -76,7 +76,30 @@ def decode_access_token(token: str) -> dict:
 
 # ── FastAPI Dependencies ─────────────────────────────────────────────────────
 
-security = HTTPBearer()
+class _Bearer(HTTPBearer):
+    """HTTPBearer that always answers 401 when credentials are absent.
+
+    fastapi==0.111.0 — the pin in requirements.txt, and therefore what CI and
+    Render install — raises 403 from HTTPBearer for a missing header. Newer
+    releases were corrected to 401 to match RFC 7235. Normalising here keeps
+    behaviour identical whichever FastAPI the environment resolves, and keeps
+    the frontend's 401 interceptor firing on unauthenticated requests.
+    """
+
+    async def __call__(self, request: Request):
+        try:
+            return await super().__call__(request)
+        except HTTPException as exc:
+            if exc.status_code == status.HTTP_403_FORBIDDEN:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Not authenticated",
+                    headers={"WWW-Authenticate": "Bearer"},
+                ) from exc
+            raise
+
+
+security = _Bearer()
 
 
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict:
