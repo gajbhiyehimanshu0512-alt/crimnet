@@ -1,10 +1,15 @@
 import axios from 'axios'
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+// Absolute API origin in production (Vercel must set VITE_API_URL at build
+// time). Empty in dev so Vite's proxy forwards /api to the backend — and
+// unlike an empty-host fallback it never points a hosted build at the
+// *visitor's* localhost:8000.
+export const API_BASE = import.meta.env.VITE_API_URL || ''
 
-const api = axios.create({
-  baseURL: BASE_URL,
-  timeout: 60000,
+export const api = axios.create({
+  baseURL: API_BASE,
+  // A cold Render instance plus NLP ingestion can easily exceed 60s.
+  timeout: 120000,
 })
 
 // ── Auth Interceptor ─────────────────────────────────────────────────────────
@@ -20,7 +25,10 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    // Only force a redirect when we actually held a token — otherwise a
+    // wrong password on the login form would reload the page and wipe the
+    // error message before anyone can read it.
+    if (error.response?.status === 401 && localStorage.getItem('crimnet_token')) {
       localStorage.removeItem('crimnet_token')
       window.location.href = '/login'
     }

@@ -1,6 +1,29 @@
 import { useState, createContext, useContext, useEffect } from 'react'
+import { api, API_BASE } from '../api/client'
 
 const AuthContext = createContext(null)
+
+// "Login failed" tells nobody anything. Spell out which link in the chain
+// broke so the operator can fix it instead of guessing.
+function describeLoginError(e) {
+  const target = API_BASE || window.location.origin
+  const detail = e.response?.data?.detail
+  if (detail) {
+    return Array.isArray(detail) ? detail.map((d) => d.msg || d).join(', ') : String(detail)
+  }
+  if (e.response) {
+    const status = e.response.status
+    if (status === 429) return 'Too many attempts — wait a minute, then try again.'
+    // A gateway/HTML body (typical of an undeployed Render service) has no
+    // `detail`, so the status is the only useful clue.
+    if (status >= 500) return `API error ${status} from ${target} — the backend may still be starting or not deployed.`
+    return `API responded ${status} at ${target}`
+  }
+  if (e.code === 'ECONNABORTED') {
+    return `Timed out contacting ${target} — a cold Render instance can take ~40s.`
+  }
+  return `Cannot reach the API at ${target}`
+}
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
@@ -8,27 +31,23 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     if (token) {
-      // Validate token — use relative URL so Vite proxy handles routing
-      fetch('/api/auth/me', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then(r => r.ok ? r.json() : Promise.reject())
-        .then(data => setUser(data))
+      // Validate token through the shared client so VITE_API_URL applies.
+      // A raw fetch('/api/...') would hit *this* origin on Vercel and get
+      // index.html back from the SPA rewrite.
+      api.get('/api/auth/me')
+        .then((res) => setUser(res.data))
         .catch(() => { localStorage.removeItem('crimnet_token'); setToken(null); setUser(null) })
     }
   }, [token])
 
   const login = async (username, password) => {
-    const res = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
-    })
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({ detail: 'Login failed' }))
-      throw new Error(err.detail || 'Login failed')
+    let data
+    try {
+      const res = await api.post('/api/auth/login', { username, password })
+      data = res.data
+    } catch (e) {
+      throw new Error(describeLoginError(e))
     }
-    const data = await res.json()
     localStorage.setItem('crimnet_token', data.access_token)
     setToken(data.access_token)
     setUser({ username: data.username, role: data.role })
