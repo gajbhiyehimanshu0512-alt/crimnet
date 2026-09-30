@@ -5,7 +5,12 @@ Local development talks to Ollama. Setting GROQ_API_KEY switches every call
 site (RAG answers, intelligence reports, relation extraction) to Groq's hosted
 API, which is what a deployment without a GPU needs.
 
-All callers use `.invoke(prompt)`, so both providers are drop-in compatible.
+Groq is driven through the raw `groq` SDK rather than `langchain-groq`, because
+langchain-groq >= 0.3 requires langchain-core >= 0.3 while this project pins
+langchain==0.2.1 (which requires langchain-core < 0.3). Installing both makes
+the resolver fail and the whole build collapses.
+
+All callers use `.invoke(prompt)`, so every provider is drop-in compatible.
 """
 
 import logging
@@ -17,30 +22,48 @@ logger = logging.getLogger(__name__)
 
 
 def _provider() -> str:
-    """Resolve 'auto' to groq when a key is present, otherwise ollama."""
-    choice = (settings.llm_provider or "auto").strip().lower()
-    if choice == "auto":
-        return "groq" if settings.groq_api_key else "ollama"
-    return choice
+    """Resolve which provider to use from settings (a property, never 'auto')."""
+    return (settings.llm_provider or "ollama").strip().lower()
+
+
+class GroqLLM:
+    """Minimal `.invoke(prompt)` wrapper around the Groq chat completions API."""
+
+    def __init__(self, api_key: str, model: str, max_tokens: int = 1024):
+        from groq import Groq  # imported lazily so Ollama-only setups skip it
+
+        self._client = Groq(api_key=api_key)
+        self._model = model
+        self._max_tokens = max_tokens
+
+    def invoke(self, prompt: str) -> str:
+        response = self._client.chat.completions.create(
+            model=self._model,
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=self._max_tokens,
+            temperature=0.1,
+        )
+        return response.choices[0].message.content or ""
 
 
 @lru_cache()
 def get_llm():
-    """Return a LangChain chat model. Cached — one instance per process."""
+    """Return an LLM client. Cached — one instance per process."""
     provider = _provider()
 
     if provider == "groq":
-        try:
-            from langchain_groq import ChatGroq
-        except ImportError as exc:
-            raise RuntimeError(
-                "GROQ_API_KEY is set but langchain-groq is not installed. "
-                "Run: pip install langchain-groq"
-            ) from exc
         if not settings.groq_api_key:
-            raise RuntimeError("llm_provider=groq but GROQ_API_KEY is empty.")
+            raise RuntimeError("LLM provider is 'groq' but GROQ_API_KEY is empty.")
         logger.info("LLM provider: groq (%s)", settings.groq_model)
-        return ChatGroq(api_key=settings.groq_api_key, model=settings.groq_model)
+        return GroqLLM(api_key=settings.groq_api_key, model=settings.groq_model)
+
+    if provider == "openai":
+        from langchain_openai import ChatOpenAI
+
+        if not settings.openai_api_key:
+            raise RuntimeError("LLM provider is 'openai' but OPENAI_API_KEY is empty.")
+        logger.info("LLM provider: openai (gpt-4o-mini)")
+        return ChatOpenAI(api_key=settings.openai_api_key, model="gpt-4o-mini", temperature=0.1)
 
     from langchain_ollama import OllamaLLM
 
@@ -50,8 +73,11 @@ def get_llm():
 
 def describe_llm() -> str:
     """Human-readable provider + model, for API responses and error text."""
-    if _provider() == "groq":
+    provider = _provider()
+    if provider == "groq":
         return f"groq:{settings.groq_model}"
+    if provider == "openai":
+        return "openai:gpt-4o-mini"
     return f"ollama:{settings.ollama_model}"
 
 

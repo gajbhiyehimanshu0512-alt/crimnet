@@ -50,19 +50,6 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-<<<<<<< HEAD
-# ── CORS ──────────────────────────────────────────────────────────────────────
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.allowed_origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-=======
->>>>>>> e2ad6f2 (fix: allow public tunnel hosts and mock ingestion endpoints)
 # ── Auth-protected paths ──────────────────────────────────────────────────────
 # All /api/* routes except /api/auth/* require a valid JWT Bearer token.
 # /health and /api/auth/* are public.
@@ -155,6 +142,17 @@ app.include_router(cases_routes.router, prefix="/api/cases",     tags=["Case Man
 
 
 # ── Health Check ─────────────────────────────────────────────────────────────
+
+@app.get("/", tags=["System"])
+async def root():
+    """Index route — also used as a default health check by some hosts."""
+    return {
+        "service": "CrimNet API",
+        "version": "1.0.0",
+        "docs": "/docs",
+        "health": "/health",
+    }
+
 
 @app.get("/health", tags=["System"])
 async def health():

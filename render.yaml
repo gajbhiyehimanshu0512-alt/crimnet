@@ -1,0 +1,42 @@
+# Render blueprint for the CrimNet backend.
+#
+# If you already created the service by hand in the Render dashboard and the
+# settings below differ, either delete the service and "New -> Blueprint" from
+# this repo, or copy the values across manually. The two that most commonly
+# cause a service that never goes live are `rootDir` (Render would otherwise
+# look for requirements.txt at the repo root and fail the build) and
+# `healthCheckPath` (Render's default of "/" would 404 without the index route).
+services:
+  - type: web
+    name: crimnet-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt && python -m spacy download en_core_web_sm
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT --workers 1
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: APP_ENV
+        value: production
+      # generateValue creates a stable random secret on first deploy, so
+      # restarts don't invalidate every JWT in the wild.
+      - key: SECRET_KEY
+        generateValue: true
+      # Point these at your Neo4j Aura instance — without them the API starts
+      # fine but every graph query returns nothing.
+      - key: NEO4J_URL
+        sync: false
+      - key: NEO4J_USER
+        value: neo4j
+      - key: NEO4J_PASSWORD
+        sync: false
+      # Leave GROQ_API_KEY empty to keep using local Ollama-style defaults;
+      # set it to route report summaries, relation extraction, and Ask-AI to Groq.
+      - key: GROQ_API_KEY
+        sync: false
+      # Comma-separated list of origins allowed to call the API with credentials,
+      # e.g. your Vercel URL. localhost is always allowed.
+      - key: CORS_ORIGINS
+        sync: false

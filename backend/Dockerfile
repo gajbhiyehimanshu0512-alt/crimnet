@@ -45,8 +45,11 @@ USER appuser
 
 EXPOSE 8000
 
-# Health check
+# Health check (Render and friends set $PORT; local Docker leaves it unset)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=5)"
+    CMD sh -c "python -c \"import urllib.request,os;urllib.request.urlopen('http://localhost:' + os.environ.get('PORT','8000') + '/health', timeout=5)\""
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
+# Render assigns a random $PORT and expects us to bind to it — hardcoding 8000
+# makes the health check fail and the service never go live. One worker by
+# default: four workers each loading spaCy/ChromaDB exhaust a free instance.
+CMD sh -c "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000} --workers ${WEB_CONCURRENCY:-1}"
